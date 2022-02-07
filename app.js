@@ -1,15 +1,43 @@
-const express = require('express')
-const app = express()
-const port = 3000
+" use strict"
+var express = require('express')
+var app = express()
+var cors = require('cors')
 
-app.get('/data/2.5/weather', get_weather)
+let token=["eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6IlJpdGlrYSIsInBhc3N3b3JkIjoiMjAwIn0.76nTaRT7MKKY2hdFX4eRsIl6KGUneXyETsg_Mrb8EGE"]
 
-function get_weather(req,response)
+const bodyParser = require('body-parser');
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(express.json());
+app.use(cors());
+
+app.get('/v1/weather',get_weather_v1)
+app.get('/v1/hello',get_hello)
+app.post('/v1/auth',post_auth)
+
+function get_weather_v1(request, response)
 {
-    response.json
-    ({"coord":{"lon":-123.262,"lat":44.5646},"weather":[{"id":804,"main":"Clouds","description":"overcast clouds","icon":"04d"}],"base":"stations","main":{"temp":279.81,"feels_like":279.81,"temp_min":277.1,"temp_max":284.71,"pressure":1026,"humidity":75},"visibility":10000,"wind":{"speed":0,"deg":0},"clouds":{"all":100},"dt":1642279321,"sys":{"type":2,"id":2040223,"country":"US","sunrise":1642261568,"sunset":1642294710},"timezone":-28800,"id":5720727,"name":"Corvallis","cod":200})
+     response.json({"coord":{"lon":-123.262,"lat":44.5646},"weather":[{"id":800,"main":"Clear","description":"clear sky","icon":"01n"}],"base":"stations","main":{"temp":282.61,"feels_like":282.61,"temp_min":280.58,"temp_max":285.29,"pressure":1018,"humidity":84},"visibility":10000,"wind":{"speed":0.89,"deg":225,"gust":0.89},"clouds":{"all":0},"dt":1642038331,"sys":{"type":2,"id":2040223,"country":"US","sunrise":1642002454,"sunset":1642035291},"timezone":-28800,"id":5720727,"name":"Corvallis","cod":200})
 }
 
-app.listen(port, () => {
-  console.log(`Example app listening at http://localhost:$\{port\}`)
-})
+function get_hello(req,res)
+{
+    res.json({"Heya": " How you Doing?"})
+}
+
+function post_auth(req,res)
+{
+    let usernames = ['Ritika','Vishwas','Shreya']
+    let passwords = ['200','300','400']
+    let username = req.body.username
+    let pwd = req.body.password
+
+    if(usernames.includes(username)){
+      if(passwords.includes(pwd)){
+          res.json({ "Sucess" : "Your API key is here: Scratch here", "access-token": token, "expires": "2022-02-20T22:25:42.142Z"})
+      }
+  }
+}
+
+app.listen(3000)
+console.log('Server is running on port 3000')
+
